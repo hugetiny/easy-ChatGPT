@@ -1,8 +1,8 @@
-import 'dart:convert';
-
-import 'package:dart_ping/dart_ping.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:http/http.dart' as http;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -10,14 +10,12 @@ import 'generated/l10n.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: "dotenv");
   await Supabase.initialize(
-      url: 'http://localhost:54321',
-      anonKey:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0');
+      url: dotenv.env['SUPABASE_URL']!,
+      anonKey: dotenv.env['SUPABASE_ANON_KEY']!);
   runApp(const MyApp());
 }
-
-// void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -63,18 +61,36 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   initState() {
     super.initState();
     _selectAll.then((data) {
-      _pings = List.filled(data.length, '...');
+      _pings = List.filled(data.length, null);
       for (var i = 0; i < data.length; ++i) {
-        final ping = Ping(data[i]['url'],
-            encoding: const Utf8Codec(allowMalformed: true), count: 2);
-        print('Running command: ${ping.command}');
-        ping.stream.listen((e) {
+        final stopwatch = Stopwatch()..start();
+
+        http.get(Uri.parse('https://' + data[i]['url'])).then((value) {
           setState(() {
-            _pings[i] = (e.summary?.time?.inMilliseconds == 0)
-                ? S.of(context).failed
-                : (e.summary?.time?.inMilliseconds).toString() + 'ms';
+            _pings[i] = (value.statusCode == 200)
+                ? stopwatch.elapsedMilliseconds.toString() + 'ms'
+                : 'failed';
+          });
+          stopwatch.stop();
+        }).onError((error, stackTrace) {
+          if (kDebugMode) {
+            print(error);
+          }
+          setState(() {
+            _pings[i] = 'failed';
           });
         });
+
+        // final ping = Ping(data[i]['url'],
+        //     encoding: const Utf8Codec(allowMalformed: true), count: 2);
+        // // print('Running command: ${ping.command}');
+        // ping.stream.listen((e) {
+        //   setState(() {
+        //     _pings[i] = (e.summary?.time?.inMilliseconds == 0)
+        //         ? S.of(context).failed
+        //         : (e.summary?.time?.inMilliseconds).toString() + 'ms';
+        //   });
+        // });
       }
     });
   }
@@ -101,8 +117,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 // DataColumn(
                 //   label: Text(S.of(context).estimatedDataDate),
                 // ),
-                const DataColumn(
-                  label: Text('ping'),
+                DataColumn(
+                  label: Text(S.of(context).latency),
                 ),
                 const DataColumn(
                   label: Text(''),
@@ -124,7 +140,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       //   int.parse(
                       //       chatgpt[index]['estimatedDataDate'].split('-')[1]),
                       // )))),
-                      DataCell(Text(_pings[index])),
+                      DataCell(_pings.isEmpty || _pings[index] == null
+                          ? const LinearProgressIndicator()
+                          : _pings[index] == 'failed'
+                              ? Text(S.of(context).failed)
+                              : Text(_pings[index])),
                       DataCell(
                         Row(
                           children: [

@@ -25,6 +25,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "chatGPTVer": MessageLookupByLibrary.simpleMessage("ChatGPT版本"),
         "estimatedDataDate": MessageLookupByLibrary.simpleMessage("估计数据日期"),
         "failed": MessageLookupByLibrary.simpleMessage("失败"),
+        "latency": MessageLookupByLibrary.simpleMessage("延迟"),
         "url": MessageLookupByLibrary.simpleMessage("链接")
       };
 }

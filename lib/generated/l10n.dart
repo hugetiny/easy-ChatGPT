@@ -89,6 +89,16 @@ class S {
       args: [],
     );
   }
+
+  /// `latency`
+  String get latency {
+    return Intl.message(
+      'latency',
+      name: 'latency',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

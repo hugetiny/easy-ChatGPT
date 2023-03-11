@@ -18,6 +18,7 @@ dependencies:
     path: ../
   url_launcher: ^6.1.6
   dart_ping: ^8.0.0
+  flutter_dotenv: ^5.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -27,5 +28,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  assets:
+    - dotenv
 flutter_intl:
   enabled: true
+

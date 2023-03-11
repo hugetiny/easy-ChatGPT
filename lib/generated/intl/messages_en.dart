@@ -26,6 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "estimatedDataDate":
             MessageLookupByLibrary.simpleMessage("Estimated data date"),
         "failed": MessageLookupByLibrary.simpleMessage("failed"),
+        "latency": MessageLookupByLibrary.simpleMessage("latency"),
         "url": MessageLookupByLibrary.simpleMessage("url")
       };
 }

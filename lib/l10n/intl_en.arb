@@ -2,5 +2,6 @@
   "url": "url",
   "chatGPTVer": "ChatGPT version",
   "estimatedDataDate":"Estimated data date",
-  "failed": "failed"
+  "failed": "failed",
+  "latency":"latency"
 }
