@@ -1,0 +1,31 @@
+name: easy_chatgpt
+description: Make ChatGPT easy to use
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.17.0 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+  supabase_flutter:
+    path: ../
+  url_launcher: ^6.1.6
+  dart_ping: ^8.0.0
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^1.0.4
+
+flutter:
+  uses-material-design: true
+  generate: true
+flutter_intl:
+  enabled: true
