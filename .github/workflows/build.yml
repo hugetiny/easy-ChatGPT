@@ -14,23 +14,24 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.7.5'
+      #          flutter-version: '3.7.5'
       #          cache: true
       - run: |
           sudo apt-get update -y
           sudo apt-get install -y ninja-build libgtk-3-dev
-          ls -la
-      - run: |
-          echo CACHE-PATH=${{ steps.flutter-action.outputs.CACHE-PATH }}
-          echo CACHE-KEY=${{ steps.flutter-action.outputs.CACHE-KEY }}
-          echo CHANNEL=${{ steps.flutter-action.outputs.CHANNEL }}
-          echo VERSION=${{ steps.flutter-action.outputs.VERSION }}
-          echo ARCHITECTURE=${{ steps.flutter-action.outputs.ARCHITECTURE }}
+
+      #      - run: |
+      #          echo CACHE-PATH=${{ steps.flutter-action.outputs.CACHE-PATH }}
+      #          echo CACHE-KEY=${{ steps.flutter-action.outputs.CACHE-KEY }}
+      #          echo CHANNEL=${{ steps.flutter-action.outputs.CHANNEL }}
+      #          echo VERSION=${{ steps.flutter-action.outputs.VERSION }}
+      #          echo ARCHITECTURE=${{ steps.flutter-action.outputs.ARCHITECTURE }}
       #      - run: flutter pub cache clean -f
       #      - run: flutter clean
       #      - run: flutter pub get
       #      - run: flutter test
       # Linux
+      - run: ls -la
       - run: flutter config --enable-linux-desktop
       - run: flutter build linux
       # web
@@ -52,20 +53,21 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.7.5'
+      #          flutter-version: '3.7.5'
       #          cache: true
       #architecture: x64
-      - run: |
-          echo CACHE-PATH=${{ steps.flutter-action.outputs.CACHE-PATH }}
-          echo CACHE-KEY=${{ steps.flutter-action.outputs.CACHE-KEY }}
-          echo CHANNEL=${{ steps.flutter-action.outputs.CHANNEL }}
-          echo VERSION=${{ steps.flutter-action.outputs.VERSION }}
-          echo ARCHITECTURE=${{ steps.flutter-action.outputs.ARCHITECTURE }}
+      #      - run: |
+      #          echo CACHE-PATH=${{ steps.flutter-action.outputs.CACHE-PATH }}
+      #          echo CACHE-KEY=${{ steps.flutter-action.outputs.CACHE-KEY }}
+      #          echo CHANNEL=${{ steps.flutter-action.outputs.CHANNEL }}
+      #          echo VERSION=${{ steps.flutter-action.outputs.VERSION }}
+      #          echo ARCHITECTURE=${{ steps.flutter-action.outputs.ARCHITECTURE }}
       #      - run: flutter pub cache clean -f
       #      - run: flutter clean
       #      - run: flutter pub get
       #      - run: flutter test
       #iOS
+      - run: ls -la
       - run: flutter build ios --release --no-codesign
       #MacOS
       - run: flutter config --enable-macos-desktop
@@ -78,18 +80,19 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.7.5'
+          #          flutter-version: '3.7.5'
           #cache: true
-      - run: |
-          echo CACHE-PATH=${{ steps.flutter-action.outputs.CACHE-PATH }}
-          echo CACHE-KEY=${{ steps.flutter-action.outputs.CACHE-KEY }}
-          echo CHANNEL=${{ steps.flutter-action.outputs.CHANNEL }}
-          echo VERSION=${{ steps.flutter-action.outputs.VERSION }}
-          echo ARCHITECTURE=${{ steps.flutter-action.outputs.ARCHITECTURE }}
+      #      - run: |
+      #          echo CACHE-PATH=${{ steps.flutter-action.outputs.CACHE-PATH }}
+      #          echo CACHE-KEY=${{ steps.flutter-action.outputs.CACHE-KEY }}
+      #          echo CHANNEL=${{ steps.flutter-action.outputs.CHANNEL }}
+      #          echo VERSION=${{ steps.flutter-action.outputs.VERSION }}
+      #          echo ARCHITECTURE=${{ steps.flutter-action.outputs.ARCHITECTURE }}
 
       #      - run: flutter pub cache clean -f
       #      - run: flutter clean
       #      - run: flutter pub get
       #      - run: flutter test
+      - run: ls
       - run: flutter config --enable-windows-desktop
       - run: flutter build windows
