@@ -1,3 +1,4 @@
+import 'package:easy_chatgpt/sign_up_in.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -48,6 +49,7 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   // static const int numItems = 10;
   // List<bool> selected = List<bool>.generate(numItems, (int index) => false);
+  User? _user;
   List _pings = [];
   final _selectAll = Supabase.instance.client
       .from('chatgpt')
@@ -57,9 +59,21 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           // ),
           );
 
+  Future<void> _getAuth() async {
+    setState(() {
+      _user = Supabase.instance.client.auth.currentUser;
+    });
+    Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+      setState(() {
+        _user = data.session?.user;
+      });
+    });
+  }
+
   @override
   initState() {
     super.initState();
+    _getAuth();
     _selectAll.then((data) {
       _pings = List.filled(data.length, null);
       for (var i = 0; i < data.length; ++i) {
@@ -105,70 +119,96 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           return const Center(child: CircularProgressIndicator());
         }
         final chatgpt = snapshot.data!;
-
+        List<DataColumn> dataColumnBase = [
+          DataColumn(label: Text(S.of(context).url)),
+          // DataColumn(
+          //   label: Text(S.of(context).estimatedDataDate),
+          // ),
+          DataColumn(
+            label: Text(S.of(context).latency),
+            onSort: (int columnIndex, bool ascending) {
+              //TODO Implement sort latency
+            },
+          ),
+          DataColumn(
+            label: const Text(''),
+            onSort: (int columnIndex, bool ascending) {
+              //TODO Implement sort likes
+            },
+          ),
+          DataColumn(label: Text(S.of(context).chatGPTVer))
+        ];
         return SizedBox(
             width: double.infinity,
             child: DataTable(
-              columns: <DataColumn>[
-                DataColumn(label: Text(S.of(context).url)),
-                DataColumn(
-                  label: Text(S.of(context).chatGPTVer),
-                ),
-                // DataColumn(
-                //   label: Text(S.of(context).estimatedDataDate),
-                // ),
-                DataColumn(
-                  label: Text(S.of(context).latency),
-                ),
-                const DataColumn(
-                  label: Text(''),
-                ),
-              ],
+              columnSpacing: 0,
+              columns: MediaQuery.of(context).size.width > 600
+                  ? dataColumnBase
+                  : dataColumnBase.sublist(0, 3),
               rows: List<DataRow>.generate(
                 chatgpt.length,
                 (int index) {
-                  return DataRow(
-                    cells: <DataCell>[
-                      DataCell(Text(chatgpt[index]['url']), onTap: () {
-                        launchUrl(Uri.parse("https://" + chatgpt[index]['url']),
-                            mode: LaunchMode.inAppWebView);
-                      }),
-                      DataCell(Text(chatgpt[index]['chatGPTVer'])),
-                      // DataCell(Text(DateFormat.yM().format(DateTime(
-                      //   int.parse(
-                      //       chatgpt[index]['estimatedDataDate'].split('-')[0]),
-                      //   int.parse(
-                      //       chatgpt[index]['estimatedDataDate'].split('-')[1]),
-                      // )))),
-                      DataCell(_pings.isEmpty || _pings[index] == null
-                          ? const LinearProgressIndicator()
-                          : _pings[index] == 'failed'
-                              ? Text(S.of(context).failed)
-                              : Text(_pings[index])),
-                      DataCell(
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.thumb_up_alt_outlined),
-                              onPressed: () {},
-                            ),
-                            Text(chatgpt[index]['like'].toString()),
-                            IconButton(
-                              icon: const Icon(Icons.thumb_down_alt_outlined),
-                              onPressed: () {},
-                            ),
-                            Text(chatgpt[index]['dislike'].toString()),
-                          ],
-                        ),
+                  List<DataCell> dataCells = [
+                    DataCell(Text(chatgpt[index]['url']), onTap: () {
+                      launchUrl(Uri.parse("https://" + chatgpt[index]['url']),
+                          mode: LaunchMode.inAppWebView);
+                    }),
+                    // DataCell(Text(DateFormat.yM().format(DateTime(
+                    //   int.parse(
+                    //       chatgpt[index]['estimatedDataDate'].split('-')[0]),
+                    //   int.parse(
+                    //       chatgpt[index]['estimatedDataDate'].split('-')[1]),
+                    // )))),
+                    DataCell(_pings.isEmpty || _pings[index] == null
+                        ? const LinearProgressIndicator()
+                        : _pings[index] == 'failed'
+                            ? Text(S.of(context).failed)
+                            : Text(_pings[index])),
+                    DataCell(
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.thumb_up_alt_outlined),
+                            onPressed: () {
+                              if (_user == null) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const SignUpIn()));
+                              } else {
+                                Supabase.instance.client
+                                    .from('chatgpt')
+                                    .update({
+                                  'like': chatgpt[index]['like'] + 1
+                                }).eq('id', chatgpt[index]['id']);
+                              }
+                            },
+                          ),
+                          Text(chatgpt[index]['like'].toString()),
+                          IconButton(
+                            icon: const Icon(Icons.thumb_down_alt_outlined),
+                            onPressed: () {},
+                          ),
+                          Text(chatgpt[index]['dislike'].toString()),
+                        ],
                       ),
-                    ],
-                    // selected: selected[index],
-                    // onSelectChanged: (bool? value) {
-                    //   setState(() {
-                    //     selected[index] = value!;
-                    //   });
-                    // },
-                  );
+                    ),
+                    DataCell(Text(chatgpt[index]['chatGPTVer']))
+                  ];
+                  // MediaQuery.of(context).size.width > 600
+                  return DataRow(
+                      cells: MediaQuery.of(context).size.width > 600
+                          ? dataCells
+                          : dataCells.sublist(0, 3)
+
+                      // selected: selected[index],
+                      // onSelectChanged: (bool? value) {
+                      //   setState(() {
+                      //     selected[index] = value!;
+                      //   });
+                      // },
+                      );
                 },
               ),
             ));

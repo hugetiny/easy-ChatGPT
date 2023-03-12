@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class MyWidget extends StatefulWidget {
-  const MyWidget({Key? key}) : super(key: key);
+class SignUpIn extends StatefulWidget {
+  const SignUpIn({Key? key}) : super(key: key);
 
   @override
-  State<MyWidget> createState() => _MyWidgetState();
+  State<SignUpIn> createState() => _SignUpInState();
 }
 
-class _MyWidgetState extends State<MyWidget> {
+class _SignUpInState extends State<SignUpIn> {
   User? _user;
   @override
   void initState() {

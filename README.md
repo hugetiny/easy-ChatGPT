@@ -15,6 +15,12 @@
 Flutter + Supabase
 
 
+# 国际化
+
+https://img.shields.io/localizely/progress/hugetiny/easy-ChatGPT?token=3fc827a919a74c93a34f12ba0cfafdfc1288fe5042f949baa8c5f7214653eb8c
+
+
+
 
 
 

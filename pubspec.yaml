@@ -31,4 +31,6 @@ flutter:
     - dotenv
 flutter_intl:
   enabled: true
+  localizely:
+    project_id: a7d8e54f-62a2-4ce1-833b-112ba69727fe
 
