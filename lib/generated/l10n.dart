@@ -50,16 +50,6 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `url`
-  String get url {
-    return Intl.message(
-      'url',
-      name: 'url',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `ChatGPT version`
   String get chatGPTVer {
     return Intl.message(
@@ -95,6 +85,16 @@ class S {
     return Intl.message(
       'latency',
       name: 'latency',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `url`
+  String get url {
+    return Intl.message(
+      'url',
+      name: 'url',
       desc: '',
       args: [],
     );

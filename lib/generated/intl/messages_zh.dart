@@ -23,7 +23,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "chatGPTVer": MessageLookupByLibrary.simpleMessage("ChatGPT版本"),
-        "estimatedDataDate": MessageLookupByLibrary.simpleMessage("估计数据日期"),
+        "estimatedDataDate": MessageLookupByLibrary.simpleMessage("训练数据日期"),
         "failed": MessageLookupByLibrary.simpleMessage("失败"),
         "latency": MessageLookupByLibrary.simpleMessage("延迟"),
         "url": MessageLookupByLibrary.simpleMessage("链接")

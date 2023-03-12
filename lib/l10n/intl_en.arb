@@ -1,7 +1,13 @@
 {
-  "url": "url",
+  "@@locale": "en",
   "chatGPTVer": "ChatGPT version",
-  "estimatedDataDate":"Estimated data date",
+  "@chatGPTVer": {},
+  "estimatedDataDate": "Estimated data date",
+  "@estimatedDataDate": {},
   "failed": "failed",
-  "latency":"latency"
+  "@failed": {},
+  "latency": "latency",
+  "@latency": {},
+  "url": "url",
+  "@url": {}
 }

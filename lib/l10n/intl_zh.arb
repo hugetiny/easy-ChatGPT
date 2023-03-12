@@ -1,7 +1,13 @@
 {
-  "url": "链接",
+  "@@locale": "zh",
   "chatGPTVer": "ChatGPT版本",
-  "estimatedDataDate":"估计数据日期",
+  "@chatGPTVer": {},
+  "estimatedDataDate": "训练数据日期",
+  "@estimatedDataDate": {},
   "failed": "失败",
-  "latency":"延迟"
+  "@failed": {},
+  "latency": "延迟",
+  "@latency": {},
+  "url": "链接",
+  "@url": {}
 }
