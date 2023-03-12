@@ -14,10 +14,11 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          cache: false
+          cache: true
       - run: |
           sudo apt-get update -y
           sudo apt-get install -y ninja-build libgtk-3-dev
+          ls -la
 #      - run: flutter pub cache clean
       - run: flutter pub get
       - run: flutter test
@@ -43,9 +44,10 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          cache: false
+          cache: true
       #architecture: x64
 #      - run: flutter pub cache clean
+      - run: ls -la
       - run: flutter pub get
       - run: flutter test
       #iOS
@@ -61,8 +63,9 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          cache: false
+          cache: true
 #      - run: flutter pub cache clean
+      - run: ls
       - run: flutter pub get
       - run: flutter test
       - run: flutter config --enable-windows-desktop
