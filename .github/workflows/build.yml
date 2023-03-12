@@ -15,7 +15,7 @@ jobs:
         with:
           channel: 'stable'
       #          flutter-version: '3.7.5'
-      #          cache: true
+          cache: false
       - run: |
           sudo apt-get update -y
           sudo apt-get install -y ninja-build libgtk-3-dev
@@ -55,7 +55,7 @@ jobs:
         with:
           channel: 'stable'
       #          flutter-version: '3.7.5'
-      #          cache: true
+          cache: false
       #architecture: x64
       #      - run: |
       #          echo CACHE-PATH=${{ steps.flutter-action.outputs.CACHE-PATH }}
@@ -83,7 +83,7 @@ jobs:
         with:
           channel: 'stable'
           #          flutter-version: '3.7.5'
-          #cache: true
+          cache: false
       #      - run: |
       #          echo CACHE-PATH=${{ steps.flutter-action.outputs.CACHE-PATH }}
       #          echo CACHE-KEY=${{ steps.flutter-action.outputs.CACHE-KEY }}
