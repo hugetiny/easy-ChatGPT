@@ -15,23 +15,20 @@ jobs:
         with:
           channel: 'stable'
           cache: false
-      - run: |
-          sudo apt-get update -y
-          sudo apt-get install -y ninja-build libgtk-3-dev
-      - run: flutter config --enable-linux-desktop
-      - run: flutter build linux
-
-    # Linux
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '11'
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          cache: false
-      - run: pub get
+      - run: |
+          sudo apt-get update -y
+          sudo apt-get install -y ninja-build libgtk-3-dev
+
+      - run: pub cache repair
+      - run: flutter pub get
       - run: flutter test
+      # Linux
+      - run: flutter config --enable-linux-desktop
+      - run: flutter build linux
       # Android
       - run: flutter build apk
       - run: flutter build appbundle
@@ -48,7 +45,8 @@ jobs:
           channel: 'stable'
           cache: false
       #architecture: x64
-      - run: pub get
+      - run: pub cache repair
+      - run: flutter pub get
       - run: flutter test
       #iOS
       - run: flutter build ios --release --no-codesign
@@ -64,5 +62,8 @@ jobs:
         with:
           channel: 'stable'
           cache: false
+      - run: pub cache repair
+      - run: flutter pub get
+      - run: flutter test
       - run: flutter config --enable-windows-desktop
       - run: flutter build windows
