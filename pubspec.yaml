@@ -14,8 +14,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
-  supabase_flutter:
-    path: ../
+  supabase_flutter: any
   url_launcher: ^6.1.6
   dart_ping: ^8.0.0
   flutter_dotenv: ^5.0.2
