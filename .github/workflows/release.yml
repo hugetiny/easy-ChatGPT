@@ -1,0 +1,45 @@
+#给我一个完整的github action实例 Flutter生成Linux，windows，macos，ios，android平台的Release文件夹压缩成一个zip或者一个installer，并发布到github release的draft中
+
+
+name: Flutter Build and Release
+
+on:
+  push:
+    tags: [ 'v[0-9]+.[0-9]+.[0-9]+' ]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+
+      - name: Replace SUPABASE_URL and SUPABASE_ANON_KEY with production values
+        run: |
+          sed -i 's/env\[\"SUPABASE_URL"\]\!/${{ secrets.SUPABASE_URL }}/' lib/main.dart
+          sed -i 's/env\[\"SUPABASE_ANON_KEY"\]\!/${{ secrets.SUPABASE_ANON_KEY }}/' lib/main.dart
+
+      - name: Build for Windows
+        run: |
+          flutter pub run msix:build
+          flutter pub run msix:pack
+
+      - name: Upload artifacts to release draft (Windows)
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          files: |
+            build/windows/runner/Release/*.msix
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+#  build-macos-ios:
+#    runs-on: macos-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#
+#      - name

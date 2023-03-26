@@ -1,7 +1,8 @@
+import 'dart:io';
+
 import 'package:easy_chatgpt/sign_up_in.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -11,10 +12,11 @@ import 'generated/l10n.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: "dotenv");
+
+  Map<String, String> env = Platform.environment;
   await Supabase.initialize(
-      url: dotenv.env['SUPABASE_URL']!,
-      anonKey: dotenv.env['SUPABASE_ANON_KEY']!);
+      url: env["SUPABASE_URL"]!, anonKey: env['SUPABASE_ANON_KEY']!);
+
   runApp(const MyApp());
 }
 
@@ -130,19 +132,19 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               //TODO Implement sort latency
             },
           ),
+          DataColumn(label: Text(S.of(context).chatGPTVer)),
           DataColumn(
             label: const Text(''),
             onSort: (int columnIndex, bool ascending) {
               //TODO Implement sort likes
             },
           ),
-          DataColumn(label: Text(S.of(context).chatGPTVer))
         ];
         return SizedBox(
             width: double.infinity,
             child: DataTable(
               columnSpacing: 0,
-              columns: MediaQuery.of(context).size.width > 600
+              columns: MediaQuery.of(context).size.width > 375
                   ? dataColumnBase
                   : dataColumnBase.sublist(0, 3),
               rows: List<DataRow>.generate(
@@ -164,51 +166,79 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         : _pings[index] == 'failed'
                             ? Text(S.of(context).failed)
                             : Text(_pings[index])),
-                    DataCell(
-                      Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.thumb_up_alt_outlined),
-                            onPressed: () {
-                              if (_user == null) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const SignUpIn()));
-                              } else {
-                                Supabase.instance.client
-                                    .from('chatgpt')
-                                    .update({
-                                  'like': chatgpt[index]['like'] + 1
-                                }).eq('id', chatgpt[index]['id']);
-                              }
-                            },
-                          ),
-                          Text(chatgpt[index]['like'].toString()),
-                          IconButton(
-                            icon: const Icon(Icons.thumb_down_alt_outlined),
-                            onPressed: () {},
-                          ),
-                          Text(chatgpt[index]['dislike'].toString()),
-                        ],
-                      ),
-                    ),
+
                     DataCell(Text(chatgpt[index]['chatGPTVer']))
                   ];
-                  // MediaQuery.of(context).size.width > 600
-                  return DataRow(
-                      cells: MediaQuery.of(context).size.width > 600
-                          ? dataCells
-                          : dataCells.sublist(0, 3)
+                  DataCell likeDislike = DataCell(
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.thumb_up_alt_outlined),
+                          onPressed: () {
+                            if (_user == null) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const SignUpIn()));
+                            } else {
+                              // Supabase.instance.client.from('users').update({
+                              //   'like': chatgpt[index]['like'] + 1
+                              // }).eq('id', chatgpt[index]['id']);
+                            }
+                          },
+                        ),
+                        Text(chatgpt[index]['like'].toString()),
+                        IconButton(
+                          icon: const Icon(Icons.thumb_down_alt_outlined),
+                          onPressed: () async {
+                            if (_user == null) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const SignUpIn()));
+                            } else {
+                              final data = await Supabase.instance.client
+                                  .from('users')
+                                  .select('dislike')
+                                  .match({
+                                    'id': Supabase
+                                        .instance.client.auth.currentUser!.id
+                                  })
+                                  .maybeSingle()
+                                  .onError((error, stackTrace) => {
+                                        if (kDebugMode) {print(error)}
+                                      });
+                              if (data == null) {
+                                await Supabase.instance.client
+                                    .from('users')
+                                    .insert({
+                                  'id': Supabase
+                                      .instance.client.auth.currentUser!.id,
+                                  'dislike': [chatgpt[index]['id']]
+                                }).onError((error, stackTrace) => {
+                                          if (kDebugMode) {print(error)}
+                                        });
+                              }
+                            }
+                          },
+                        ),
+                        Text(chatgpt[index]['dislike'].toString()),
+                      ],
+                    ),
+                  );
 
-                      // selected: selected[index],
-                      // onSelectChanged: (bool? value) {
-                      //   setState(() {
-                      //     selected[index] = value!;
-                      //   });
-                      // },
-                      );
+                  return DataRow(
+                    cells: MediaQuery.of(context).size.width > 375
+                        ? [...dataCells, likeDislike]
+                        : [...dataCells.sublist(0, 2), likeDislike],
+
+                    // selected: selected[index],
+                    // onSelectChanged: (bool? value) {
+                    //   setState(() {
+                    //     selected[index] = value!;
+                    //   });
+                    // },
+                  );
                 },
               ),
             ));
