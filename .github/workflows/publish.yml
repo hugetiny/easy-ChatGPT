@@ -1,11 +1,19 @@
-name: Publish
-on:
+#name: Publish
+#on:
 #  pull_request:
 #    branches: [ main ]
 #    types: [opened, synchronize, reopened, labeled, unlabeled]
-  push:
-    tags: [ 'v[0-9]+.[0-9]+.[0-9]+' ]
+#  push:
+#    tags: [ 'v[0-9]+.[0-9]+.[0-9]+' ]
+#
+#jobs:
+#  publish:
+#    uses: dart-lang/ecosystem/.github/workflows/publish.yaml@main
 
-jobs:
-  publish:
-    uses: dart-lang/ecosystem/.github/workflows/publish.yaml@main
+
+
+
+#    env:
+#      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+#      SUPABASE_DB_PASSWORD: ${{ secrets.STAGING_DB_PASSWORD }}
+#      PROJECT_ID: cimpzzikygouamvsjwxa
