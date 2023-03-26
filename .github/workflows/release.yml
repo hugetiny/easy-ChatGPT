@@ -1,11 +1,6 @@
-#给我一个完整的github action实例 Flutter生成Linux，windows，macos，ios，android平台的Release文件夹压缩成一个zip或者一个installer，并发布到github release的draft中
-
-
-name: Flutter Build and Release
-
 on:
   push:
-    tags: [ 'v[0-9]+.[0-9]+.[0-9]+' ]
+    tags: [ '[0-9]+.[0-9]+.[0-9]+' ]
 
 jobs:
   build-windows:
