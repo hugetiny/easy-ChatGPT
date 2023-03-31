@@ -20,6 +20,7 @@ jobs:
 
       - name: Build for Windows
         run: |
+          flutter pub get
           flutter pub run msix:build
           flutter pub run msix:pack
 
