@@ -21,6 +21,7 @@ jobs:
       - name: Build for Windows
         run: |
           flutter pub get
+          flutter config --enable-windows-desktop
           flutter pub run msix:build
           flutter pub run msix:pack
 
