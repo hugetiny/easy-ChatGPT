@@ -20,10 +20,10 @@ jobs:
 
       - name: Build for Windows
         run: |
-          flutter pub get
+#          flutter pub get
           flutter config --enable-windows-desktop
+          flutter pub run msix:create
           flutter pub run msix:build
-          flutter pub run msix:pack
 
       - name: Upload artifacts to release draft (Windows)
         uses: softprops/action-gh-release@v1
